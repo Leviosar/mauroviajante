@@ -1,29 +1,34 @@
-import csv
-import time
-from Classes.Airport import Airport
+from util import *
 
-airports = list()
-routes = list()
+from Classes.Operator import Operator
 
-with open('airports-extended.csv') as csv_file:
-    csv_reader = csv.DictReader(csv_file, delimiter=',')
-    line_count = 0
-    for row in csv_reader:
-        if row['type'] == 'airport':
-            airports.append(Airport(row['airport_name'], row['iata_code'], row['lat'], row['lon']))
+operator = Operator()
 
-with open('routes.csv') as csv_file:
-    csv_reader = csv.DictReader(csv_file, delimiter=',')
-    line_count = 0
-    for row in csv_reader:
-        routes.append(row)
+while True:
+    showGeneralMenu()
+    generalOption = int(input())
+    generalOption = checkGeneralOption(generalOption)
 
-def getAirport(str):
-    for airport in airports:
-        if airport.code == str:
-            return airport
-    return None
-            
-print(getAirport('CWB'))
-print(airports[1])
-print(len(routes))
+    if generalOption == REGISTER_FLIGHT:
+        showFlightsMenu()
+        flightOption = int(input())
+        flightOption = checkFlightOption(flightOption)
+
+        operator.registerFlight(flightOption)
+
+    elif generalOption == CANCEL_FLIGHT:
+        operator.showFlights()
+        operator.cancelFlight()
+
+    elif generalOption == NEW_BOOKING:
+        operator.showFlights()
+
+        number = int(input('Insira o número do voo no qual deseja fazer a reserva: '))
+
+        operator.newBooking(number)
+    
+    elif generalOption == SHOW_FLIGHTS:
+        operator.showFlights()
+    
+    else:
+        break
